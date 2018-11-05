@@ -1,0 +1,29 @@
+$padding: 10px;
+
+* {
+	font-family: Helvetica, Arial, Times New Roman, Serif;
+}
+
+.sticker-container {
+	display:        flex;
+	flex-direction: column;
+	flex-wrap:      wrap;
+	height:         100%;
+	padding:        15px;
+
+	.sticker {
+		background:    orange;
+		min-height:    50px;
+		max-height:    300px;
+		min-width:     100px;
+		max-width:     300px;
+		border-radius: $padding;
+		padding:       $padding;
+		margin:        0 15px 15px 0;
+		box-shadow:    3px 3px 13px 0 rgba(0, 0, 0, 0.5);
+
+		&.is-dragging {
+			border-style: dashed;
+		}
+	}
+}
