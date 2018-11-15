@@ -1,11 +1,16 @@
 import * as React from "react";
 
 /**
+ * Стикер.
+ *
  * @property {StickerModel} props.sticker     Стикер
  * @property {function}     props.onSetCoords Событие установки координат стикера. Передаёт аргументы: id, Coords
  * @property {function}     props.onMoved     Событие перемещения стикера. Передаёт аргументы: id, Coords
  */
 export default class Sticker extends React.PureComponent {
+	/**
+	 * @inheritdoc
+	 */
 	constructor(props) {
 		super(props);
 
@@ -19,11 +24,21 @@ export default class Sticker extends React.PureComponent {
 
 		this.stickerRef = null;
 	}
+
+	/**
+	 * Обработка начала перемещения.
+	 */
 	onDragStart() {
 		this.setState({
 			isDragging: true,
 		});
 	}
+
+	/**
+	 * Обработка окончания перемещения.
+	 *
+	 * @param {SyntheticEvent} e Событие
+	 */
 	onDragEnd(e) {
 		this.setState({
 			isDragging: false,
@@ -36,20 +51,37 @@ export default class Sticker extends React.PureComponent {
 		});
 	}
 
+	/**
+	 * Указание ref.
+	 *
+	 * @param {Node} node Нода дерева
+	 */
 	setRef(node) {
 		this.stickerRef = node;
 	}
 
+	//@TODO-11.11.18-Kazancev A. при ресайзе экрана обновить координаты
+	/**
+	 * @inheritdoc
+	 */
 	componentDidMount() {
 		this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	componentDidUpdate(prevProps) {
 		if (this.props.sticker !== prevProps.sticker) {
 			this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
 		}
 	}
 
+	/**
+	 * Получение текущих координат.
+	 *
+	 * @return {Coords}
+	 */
 	getCurrentCoords() {
 		return {
 			beginX: this.stickerRef.offsetLeft,
@@ -59,6 +91,9 @@ export default class Sticker extends React.PureComponent {
 		};
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	render() {
 		let divClass = 'sticker';
 

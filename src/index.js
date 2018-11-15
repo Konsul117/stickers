@@ -5,11 +5,18 @@ import App from './components/App.js';
 import 'moment/locale/ru';
 import './extendings/extendings';
 import './extendings/string';
+import {createStore} from "redux";
+import reducers from "./reducers";
+import {Provider} from "react-redux";
+
+const store = createStore(reducers);
 
 const render = (Component) => {
 	ReactDOM.render(
 		<AppContainer>
-			<Component />
+			<Provider store={store}>
+				<Component />
+			</Provider>
 		</AppContainer>,
 		document.getElementById('mount-point')
 	);

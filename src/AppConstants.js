@@ -1,0 +1,3 @@
+export default {
+	EVENT_STICKER_MOVE: 'EVENT_STICKER_MOVE',
+};

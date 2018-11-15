@@ -1,4 +1,5 @@
 $padding: 10px;
+$drag-border-width: 2px;
 
 * {
 	font-family: Helvetica, Arial, Times New Roman, Serif;
@@ -18,12 +19,13 @@ $padding: 10px;
 		min-width:     100px;
 		max-width:     300px;
 		border-radius: $padding;
-		padding:       $padding;
+		padding:       $padding + $drag-border-width;
 		margin:        0 15px 15px 0;
 		box-shadow:    3px 3px 13px 0 rgba(0, 0, 0, 0.5);
 
 		&.is-dragging {
-			border-style: dashed;
+			padding: $padding;
+			border:  $drag-border-width rgba(0, 0, 0, 1) dashed;
 		}
 	}
 }
