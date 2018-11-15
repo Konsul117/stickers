@@ -18,9 +18,10 @@ export default class Sticker extends React.PureComponent {
 			isDragging: false,
 		};
 
-		this.onDragStart = this.onDragStart.bind(this);
-		this.onDragEnd   = this.onDragEnd.bind(this);
-		this.setRef   = this.setRef.bind(this);
+		this.onDragStart    = this.onDragStart.bind(this);
+		this.onDragEnd      = this.onDragEnd.bind(this);
+		this.setRef         = this.setRef.bind(this);
+		this.onWindowResize = this.onWindowResize.bind(this);
 
 		this.stickerRef = null;
 	}
@@ -60,12 +61,27 @@ export default class Sticker extends React.PureComponent {
 		this.stickerRef = node;
 	}
 
+	/**
+	 * Обработка при изменении размера экрана.
+	 */
+	onWindowResize() {
+		this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
+	}
+
 	//@TODO-11.11.18-Kazancev A. при ресайзе экрана обновить координаты
 	/**
 	 * @inheritdoc
 	 */
 	componentDidMount() {
 		this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
+		window.addEventListener('resize', this.onWindowResize);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.onWindowResize);
 	}
 
 	/**
