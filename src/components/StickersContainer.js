@@ -1,6 +1,9 @@
 import * as React from "react";
 import Sticker from "./Sticker";
 import "../styles/stickers.scss";
+import StickerOptions from "./StickerOptions";
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
 /**
  * Контейнер стикеров.
@@ -15,11 +18,14 @@ export default class StickersContainer extends React.PureComponent {
 		super(props);
 
 		this.state = {
-			stickers: this.sortStickers(this.props.stickers.list),
+			stickers:       this.sortStickers(this.props.stickers.list),
+			editingSticker: null,
 		};
 
 		this.onStickerSetCoords = this.onStickerSetCoords.bind(this);
-		this.onStickerMoved   = this.onStickerMoved.bind(this);
+		this.onStickerMoved     = this.onStickerMoved.bind(this);
+		this.onStickerClick     = this.onStickerClick.bind(this);
+		this.onAddStickerClick  = this.onAddStickerClick.bind(this);
 
 		this.stickersCoords = new Map();
 	}
@@ -86,15 +92,36 @@ export default class StickersContainer extends React.PureComponent {
 	}
 
 	/**
+	 *
+	 * @param {StickerModel} sticker
+	 */
+	onStickerClick(sticker) {
+		this.props.onEditSticker(sticker.id);
+	}
+
+	onAddStickerClick() {
+		this.props.onCreateSticker();
+
+		// this.setState({
+		// 	editingSticker: sticker,
+		// });
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	render() {
 		return <div className="sticker-container">
+			<Button variant="fab" color="primary" aria-label="Add" onClick={this.onAddStickerClick}>
+				<AddIcon />
+			</Button>
 			{
 				Array.from(this.state.stickers.values()).map(/** @param {StickerModel} sticker */(sticker) => {
-					return <Sticker key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
+					return <Sticker onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
 				})
 			}
+
+			<StickerOptions sticker={this.props.stickers.editingSticker} onComplete={this.props.onEditComplete} onDismiss={this.props.onEditDismiss} />
 		</div>
 	}
 }

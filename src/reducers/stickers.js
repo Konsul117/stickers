@@ -9,6 +9,7 @@ const initialState = {
 		[5, {id: 5, text: 'fgh', index: 5}],
 		[6, {id: 6, text: 'vbn', index: 6}],
 	]),
+	editingSticker: null,
 };
 
 export default (state = initialState, action) => {
@@ -51,6 +52,52 @@ export default (state = initialState, action) => {
 			newState.list = newStickers;
 
 			return newState;
+		}
+
+		case AppConstants.EVENT_STICKER_CREATE: {
+			const maxId = Math.max.apply(Math, Array.from(state.list.keys()));
+
+			const sticker = {
+				id:    maxId+1,
+				index: 0,
+				text:  '',
+			};
+
+			const newState          = Object.assign({}, state);
+			newState.editingSticker = sticker;
+
+			return newState;
+		}
+
+		case AppConstants.EVENT_STICKER_EDIT: {
+			const newState          = Object.assign({}, state);
+
+			newState.editingSticker = Object.assign({}, state.list.get(action.id));
+
+			return newState;
+		}
+
+		case AppConstants.EVENT_STICKER_EDIT_COMPLETE: {
+			const newState          = Object.assign({}, state);
+
+			const editingSticker = Object.assign({}, newState.editingSticker);
+			editingSticker.text = action.text;
+
+			const newStickers = new Map(state.list.entries());
+			newStickers.set(editingSticker.id, editingSticker);
+
+			newState.editingSticker = null;
+			newState.list           = newStickers;
+
+			return newState;
+		}
+
+		case AppConstants.EVENT_STICKER_EDIT_DISMISS: {
+			const newState          = Object.assign({}, state);
+			newState.editingSticker = null;
+
+			return newState;
+
 		}
 
 		default:

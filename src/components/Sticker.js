@@ -6,6 +6,7 @@ import * as React from "react";
  * @property {StickerModel} props.sticker     Стикер
  * @property {function}     props.onSetCoords Событие установки координат стикера. Передаёт аргументы: id, Coords
  * @property {function}     props.onMoved     Событие перемещения стикера. Передаёт аргументы: id, Coords
+ * @property {function}     props.onClick     Событие клика по стикеру. Передаётся аргументом модель стикера
  */
 export default class Sticker extends React.PureComponent {
 	/**
@@ -22,6 +23,7 @@ export default class Sticker extends React.PureComponent {
 		this.onDragEnd      = this.onDragEnd.bind(this);
 		this.setRef         = this.setRef.bind(this);
 		this.onWindowResize = this.onWindowResize.bind(this);
+		this.onClick        = this.onClick.bind(this);
 
 		this.stickerRef = null;
 	}
@@ -107,6 +109,10 @@ export default class Sticker extends React.PureComponent {
 		};
 	}
 
+	onClick() {
+		this.props.onClick(this.props.sticker);
+	}
+
 	/**
 	 * @inheritdoc
 	 */
@@ -117,6 +123,15 @@ export default class Sticker extends React.PureComponent {
 			divClass += ' is-dragging';
 		}
 
-		return <div ref={this.setRef} className={divClass} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>{this.props.sticker.text}</div>
+		return <div
+			ref={this.setRef}
+			className={divClass}
+			draggable="true"
+			onDragStart={this.onDragStart}
+			onDragEnd={this.onDragEnd}
+			onClick={this.onClick}
+		>
+			{this.props.sticker.text}
+		</div>
 	}
 }
