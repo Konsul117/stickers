@@ -29,7 +29,7 @@ export default class StickersContainer extends React.PureComponent {
 		this.onStickerMoved     = this.onStickerMoved.bind(this);
 		this.onStickerClick     = this.onStickerClick.bind(this);
 		this.onAddStickerClick  = this.onAddStickerClick.bind(this);
-		this.registerStickerRef   = this.registerStickerRef.bind(this);
+		this.registerStickerRef = this.registerStickerRef.bind(this);
 		this.onWindowResize     = this.onWindowResize.bind(this);
 
 		this.stickersCoords = new Map();
@@ -42,6 +42,7 @@ export default class StickersContainer extends React.PureComponent {
 	 */
 	componentDidMount() {
 		window.addEventListener('resize', this.onWindowResize);
+		this.updaterStickersCoords();
 	}
 
 	/**
@@ -114,6 +115,7 @@ export default class StickersContainer extends React.PureComponent {
 	 * Обновление актуальных координат стикеров.
 	 */
 	updaterStickersCoords() {
+		this.stickersCoords = new Map();
 		Array.from(this.state.stickers.keys()).forEach((id) => {
 			if (this.stickersRefs.has(id) === false) {
 				console.debug('Отсутствует ref для стикера', id);
@@ -188,7 +190,12 @@ export default class StickersContainer extends React.PureComponent {
 				})
 			}
 
-			<StickerOptions sticker={this.props.stickers.editingSticker} onComplete={this.props.onEditComplete} onDismiss={this.props.onEditDismiss} />
+			<StickerOptions
+				sticker={this.props.stickers.editingSticker}
+				onComplete={this.props.onEditComplete}
+				onDelete={this.props.onDelete}
+				onDismiss={this.props.onEditDismiss}
+			/>
 		</div>
 	}
 }

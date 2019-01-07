@@ -36,49 +36,98 @@ function getModalStyle() {
 }
 
 /**
- * @property {StickerModel|null} props.sticker
- * @property {function}          props.onComplete
- * @property {function}          props.onDismiss
+ * Компонент операций со стикером.
+ *
+ * @property {StickerModel|null} props.sticker    Стикер
+ * @property {function}          props.onDelete   Коллбэк удаления, аргументом передаётся идентификатор стикера
+ * @property {function}          props.onComplete Коллбэк завершения правки
+ * @property {function}          props.onDismiss  Коллбэк отмены редактирования
+ *
+ * @property {boolean} state.isOpen      Открыта ли модалка
+ * @property {string}  state.text        Текст стикера
+ * @property {boolean} isDeleteRequested Запрошено ли удаление
  */
 class StickerOptions extends React.PureComponent {
+	/**
+	 * @inheritdoc
+	 */
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			isOpen: (this.props.sticker !== null),
-			text:   (this.props.sticker !== null) ? this.props.sticker.text : '',
-		};
+		this.state = this.getInitialStickerState(this.props.sticker);
 
-		this.handleChange = this.handleChange.bind(this);
-		this.onComplete   = this.onComplete.bind(this);
+		this.handleChange         = this.handleChange.bind(this);
+		this.onComplete           = this.onComplete.bind(this);
+		this.onDeleteClick        = this.onDeleteClick.bind(this);
+		this.onDeleteConfirmClick = this.onDeleteConfirmClick.bind(this);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (this.props.sticker !== prevProps.sticker) {
-			this.setState({
-				isOpen: (this.props.sticker !== null),
-				text:   (this.props.sticker !== null) ? this.props.sticker.text : '',
-			});
+			this.setState(this.getInitialStickerState(this.props.sticker));
 		}
 	}
 
+	/**
+	 * Получение начальных параметров состояния на основе нового стикера.
+	 *
+	 * @param {StickerModel|null} sticker Стикер
+	 *
+	 * @return {object}
+	 */
+	getInitialStickerState(sticker) {
+		return {
+			isOpen:            (sticker !== null),
+			text:              (sticker !== null) ? sticker.text : '',
+			isDeleteRequested: false,
+		};
+	}
+
+	/**
+	 * Обработка изменения формы.
+	 *
+	 * @param {SyntheticEvent} e Событие
+	 */
 	handleChange(e) {
 		this.setState({
 			[e.target.name]: event.target.value,
 		});
 	};
 
+	/**
+	 * Обработка завершения редактирования.
+	 */
 	onComplete() {
 		this.props.onComplete(this.state.text);
 	}
 
-	render() {
-		const { classes } = this.props;
+	/**
+	 * Обработка нажатия на удаление.
+	 */
+	onDeleteClick() {
+		this.setState({
+			isDeleteRequested: true,
+		});
+	}
 
+	/**
+	 * Обработка нажатия на подтверждение удаления.
+	 */
+	onDeleteConfirmClick() {
+		this.props.onDelete(this.props.sticker.id);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	render() {
 		return (
 			<div>
 				<Modal open={this.state.isOpen} onClose={this.props.onDismiss}>
-					<div style={getModalStyle()} className={classes.paper}>
+					<div style={getModalStyle()} className={this.props.classes.paper}>
 						{
 							(this.props.sticker !== null)
 							? <React.Fragment>
@@ -89,7 +138,7 @@ class StickerOptions extends React.PureComponent {
 										<TextField
 											required
 											label="Текст"
-											className={classes.textField}
+											className={this.props.textField}
 											margin="normal"
 											name="text"
 											value={this.state.text}
@@ -100,11 +149,13 @@ class StickerOptions extends React.PureComponent {
 									<br/>
 
 									<Grid container justify="space-between">
-										<Button variant="contained" color="primary" className={classes.button} onClick={this.onComplete}>
+										<Button variant="contained" color="primary" className={this.props.classes.button} onClick={this.onComplete}>
 											Сохранить
 										</Button>
 
-										<Button color="primary" className={classes.button} onClick={this.props.onDismiss}>
+										{this.renderDeleteBtn()}
+
+										<Button color="primary" className={this.props.classes.button} onClick={this.props.onDismiss}>
 											Отмена
 										</Button>
 									</Grid>
@@ -116,6 +167,27 @@ class StickerOptions extends React.PureComponent {
 				</Modal>
 			</div>
 		)
+	}
+
+	/**
+	 * Рендер кнопки удаления, если она нужна.
+	 *
+	 * @return {React.ReactNode|null}
+	 */
+	renderDeleteBtn() {
+		if (this.props.sticker.isNew) {
+			return null;
+		}
+
+		if (this.state.isDeleteRequested === true) {
+			return <Button color="primary" className={this.props.classes.button} onClick={this.onDeleteConfirmClick}>
+				Точно?
+			</Button>;
+		}
+
+		return <Button color="primary" className={this.props.classes.button} onClick={this.onDeleteClick}>
+			Удалить
+		</Button>;
 	}
 
 }

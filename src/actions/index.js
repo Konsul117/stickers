@@ -68,8 +68,22 @@ export const editDismiss =
 	 *
 	 * @return {object}
 	 */
-		(text) => {
+	() => {
 		return {
 			type: AppConstants.EVENT_STICKER_EDIT_DISMISS,
+		};
+	};
+
+export const deleteSticker =
+
+	/**
+	 * Удаление стикера.
+	 *
+	 * @return {object}
+	 */
+		(id) => {
+		return {
+			type: AppConstants.EVENT_STICKER_DELETE,
+			id:   id,
 		};
 	};
