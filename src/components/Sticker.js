@@ -22,7 +22,6 @@ export default class Sticker extends React.PureComponent {
 		this.onDragStart    = this.onDragStart.bind(this);
 		this.onDragEnd      = this.onDragEnd.bind(this);
 		this.setRef         = this.setRef.bind(this);
-		this.onWindowResize = this.onWindowResize.bind(this);
 		this.onClick        = this.onClick.bind(this);
 
 		this.stickerRef = null;
@@ -64,38 +63,6 @@ export default class Sticker extends React.PureComponent {
 	}
 
 	/**
-	 * Обработка при изменении размера экрана.
-	 */
-	onWindowResize() {
-		this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
-	}
-
-	//@TODO-11.11.18-Kazancev A. при ресайзе экрана обновить координаты
-	/**
-	 * @inheritdoc
-	 */
-	componentDidMount() {
-		this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
-		window.addEventListener('resize', this.onWindowResize);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.onWindowResize);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	componentDidUpdate(prevProps) {
-		if (this.props.sticker !== prevProps.sticker) {
-			this.props.onSetCoords(this.props.sticker.id, this.getCurrentCoords());
-		}
-	}
-
-	/**
 	 * Получение текущих координат.
 	 *
 	 * @return {Coords}
@@ -109,6 +76,9 @@ export default class Sticker extends React.PureComponent {
 		};
 	}
 
+	/**
+	 * Обработка клика по стикеру.
+	 */
 	onClick() {
 		this.props.onClick(this.props.sticker);
 	}

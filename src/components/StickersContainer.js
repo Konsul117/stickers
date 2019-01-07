@@ -8,7 +8,10 @@ import AddIcon from '@material-ui/icons/Add';
 /**
  * Контейнер стикеров.
  *
- * @property {Map<string, StickerModel>} props.stickers Стикеры
+ * @property {Map<number, StickerModel>} props.stickers.list Стикеры
+ * @property {Map<number, StickerModel>} state.stickers      Стикеры
+ *
+ * @property {Map<number, Sticker>} stickersRefs
  */
 export default class StickersContainer extends React.PureComponent {
 	/**
@@ -26,8 +29,65 @@ export default class StickersContainer extends React.PureComponent {
 		this.onStickerMoved     = this.onStickerMoved.bind(this);
 		this.onStickerClick     = this.onStickerClick.bind(this);
 		this.onAddStickerClick  = this.onAddStickerClick.bind(this);
+		this.registerStickerRef   = this.registerStickerRef.bind(this);
+		this.onWindowResize     = this.onWindowResize.bind(this);
 
 		this.stickersCoords = new Map();
+
+		this.stickersRefs = new Map();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	componentDidMount() {
+		window.addEventListener('resize', this.onWindowResize);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.onWindowResize);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	componentDidUpdate(prevProps) {
+		if (prevProps.stickers.list !== this.props.stickers.list) {
+			this.setState({
+				stickers: this.sortStickers(this.props.stickers.list),
+			}, () => {
+				this.updaterStickersCoords();
+			});
+
+			//очищаем стикеры, которые были удалены
+			Array.from(this.stickersRefs.keys()).forEach((id) => {
+				if (this.props.stickers.list.has(id) === false) {
+					this.stickersRefs.delete(id);
+				}
+			});
+		}
+	}
+
+	/**
+	 * Обработка при изменении размера экрана.
+	 */
+	onWindowResize() {
+		this.updaterStickersCoords();
+	}
+
+	/**
+	 * Регистрация ref стикера в списке.
+	 */
+	registerStickerRef(r) {
+		//если стикер отмонтирован, то мы не сможем удалить его из списка, т.к. не знаем его id, потому он будет удалён при обнловлении списка.
+		if (r === null) {
+			return;
+		}
+
+		this.stickersRefs.set(r.props.sticker.id, r);
 	}
 
 	/**
@@ -50,12 +110,19 @@ export default class StickersContainer extends React.PureComponent {
 		this.props.onStickerMoved(id, newCoords, this.stickersCoords);
 	}
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.stickers.list !== this.props.stickers.list) {
-			this.setState({
-				stickers: this.sortStickers(this.props.stickers.list),
-			});
-		}
+	/**
+	 * Обновление актуальных координат стикеров.
+	 */
+	updaterStickersCoords() {
+		Array.from(this.state.stickers.keys()).forEach((id) => {
+			if (this.stickersRefs.has(id) === false) {
+				console.debug('Отсутствует ref для стикера', id);
+
+				return;
+			}
+
+			this.stickersCoords.set(id, this.stickersRefs.get(id).getCurrentCoords());
+		})
 	}
 
 	/**
@@ -92,6 +159,7 @@ export default class StickersContainer extends React.PureComponent {
 	}
 
 	/**
+	 * Обработка клика по стикеру.
 	 *
 	 * @param {StickerModel} sticker
 	 */
@@ -99,12 +167,11 @@ export default class StickersContainer extends React.PureComponent {
 		this.props.onEditSticker(sticker.id);
 	}
 
+	/**
+	 * Обработка клика по кнопке добавления стикера.
+	 */
 	onAddStickerClick() {
 		this.props.onCreateSticker();
-
-		// this.setState({
-		// 	editingSticker: sticker,
-		// });
 	}
 
 	/**
@@ -117,7 +184,7 @@ export default class StickersContainer extends React.PureComponent {
 			</Button>
 			{
 				Array.from(this.state.stickers.values()).map(/** @param {StickerModel} sticker */(sticker) => {
-					return <Sticker onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
+					return <Sticker ref={this.registerStickerRef} onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
 				})
 			}
 
