@@ -2,7 +2,7 @@ $padding: 10px;
 $drag-border-width: 2px;
 
 * {
-	font-family: Helvetica, Arial, Times New Roman, Serif;
+	font-family: Helvetica, Arial, Times New Roman, serif;
 }
 
 .sticker-container {
@@ -12,21 +12,25 @@ $drag-border-width: 2px;
 	height:         100%;
 	padding:        15px;
 
-	.sticker {
-		cursor:        pointer;
-		background:    orange;
-		min-height:    50px;
-		max-height:    300px;
-		min-width:     100px;
-		max-width:     300px;
-		border-radius: $padding;
-		padding:       $padding + $drag-border-width;
-		margin:        0 15px 15px 0;
-		box-shadow:    3px 3px 13px 0 rgba(0, 0, 0, 0.5);
+	.sticker-wrapper {
+		margin: 0 15px 15px 0;
 
-		&.is-dragging {
-			padding: $padding;
-			border:  $drag-border-width rgba(0, 0, 0, 1) dashed;
+		.sticker {
+			cursor:        pointer;
+			background:    orange;
+			min-height:    50px;
+			max-height:    300px;
+			min-width:     100px;
+			max-width:     300px;
+			border-radius: $padding;
+			padding:       $padding + $drag-border-width;
+
+			box-shadow:    3px 3px 13px 0 rgba(0, 0, 0, 0.5);
+
+			&.is-dragging {
+				padding: $padding;
+				border:  $drag-border-width rgba(0, 0, 0, 1) dashed;
+			}
 		}
 	}
 }
