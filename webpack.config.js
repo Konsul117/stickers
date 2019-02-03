@@ -76,12 +76,24 @@ const clientConfig = (env, argv) => {
 		},
 	};
 
-	if (argv.mode === 'dev') {
+	if (argv.mode === 'development') {
 		result.devtool = 'inline-source-map';
+	}
+	else {
 		result.optimization = {
 			minimize: true,
 			minimizer: [
-				new UglifyJsPlugin()
+				new UglifyJsPlugin({
+					test:          /\.js$/i,
+					exclude:       /node_modules/,
+					parallel:      true,
+					cache:         true,
+					uglifyOptions: {
+						output: {
+							comments: false,
+						}
+					}
+				}),
 			]
 		};
 	}
