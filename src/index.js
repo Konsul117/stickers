@@ -5,18 +5,15 @@ import App from './components/App.js';
 import 'moment/locale/ru';
 import './extendings/extendings';
 import './extendings/string';
-import {createStore} from "redux";
+import {applyMiddleware, compose, createStore} from "redux";
 import reducers from "./reducers";
 import {Provider} from "react-redux";
+import ApiMiddleware from './middlewares/ApiMiddleware';
 
 //если дев-режим, то подключаем devtools
-let devtools = undefined;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-if (module.hot) {
-	devtools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-}
-
-const store = createStore(reducers, devtools);
+const store = createStore(reducers, composeEnhancers(applyMiddleware(ApiMiddleware)));
 
 const render = (Component) => {
 	ReactDOM.render(

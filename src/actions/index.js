@@ -3,20 +3,14 @@ import AppConstants from "../AppConstants";
 export const moveSticker =
 
 	/**
-	 * Перемещение стикера.
-	 *
-	 * @param {number} stickerId Идентификатор стикера
-	 * @param {Coords} movementCoords Координаты, на которые стикер был перемещён
-	 * @param {Map<string, Coords>} allStickersCoords Кооординаты всех стикеров
+	 * @param {StickerPosition[]} changes Изменения, вызванные перемещением
 	 *
 	 * @return {object}
 	 */
-	(stickerId, movementCoords, allStickersCoords) => {
+	(changes) => {
 		return {
-			type:              AppConstants.EVENT_STICKER_MOVE,
-			stickerId:         stickerId,
-			movementCoords:    movementCoords,
-			allStickersCoords: allStickersCoords,
+			type: AppConstants.EVENT_STICKER_MOVE,
+			changes,
 		};
 	};
 
@@ -27,10 +21,10 @@ export const createSticker =
 	 *
 	 * @return {object}
 	 */
-		() => {
-			return {
-				type: AppConstants.EVENT_STICKER_CREATE,
-			};
+	() => {
+		return {
+			type: AppConstants.EVENT_STICKER_CREATE,
+		};
 	};
 
 export const edit =

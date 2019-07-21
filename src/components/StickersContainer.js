@@ -108,7 +108,7 @@ export default class StickersContainer extends React.PureComponent {
 	 * @param {Coords} newCoords Новые координаты
 	 */
 	onStickerMoved(id, newCoords) {
-		this.props.onStickerMoved(id, newCoords, this.stickersCoords);
+		this.props.onStickerMoved(id, newCoords, this.stickersCoords, this.props.stickers.list);
 	}
 
 	/**

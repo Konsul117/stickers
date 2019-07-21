@@ -15,3 +15,10 @@
  * @property {number} endX   Координаты правой границы по горизонтальной оси
  * @property {number} endY   Координаты нижней границы по вертикальной оси
  */
+
+/**
+ * @typedef {object} StickerPosition Данные о перемещении стикера
+ *
+ * @property {number} stickerId Идентификатор стикера
+ * @property {number} index     Индекс стикера, который должен быть ему назначен
+ */

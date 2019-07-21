@@ -17,35 +17,9 @@ export default (state = initialState, action) => {
 		case AppConstants.EVENT_STICKER_MOVE: {
 			const newStickers = new Map(state.list.entries());
 
-			const movementCoords = action.movementCoords;
-
-			action.allStickersCoords.forEach((itemCoords, itemId) => {
-				if (itemId === action.stickerId) {
-					return;
-				}
-
-				let isChange = false;
-				if (movementCoords.beginY >= itemCoords.beginY && movementCoords.beginY <= itemCoords.endY && movementCoords.beginX >= itemCoords.beginX && movementCoords.beginX <= itemCoords.endX) {
-					isChange = true;
-				}
-
-				if (isChange) {
-					/** @type {StickerModel} Стикер, с которым надо поменяться индексами */
-					let itemSticker = newStickers.get(itemId);
-					/** @type {StickerModel} Стикер, который был передвинут */
-					let currSticker = newStickers.get(action.stickerId);
-
-					const itemIndex = itemSticker.index;
-
-					itemSticker = Object.assign({}, itemSticker);
-					itemSticker.index = currSticker.index;
-
-					currSticker = Object.assign({}, currSticker);
-					currSticker.index = itemIndex;
-
-					newStickers.set(action.stickerId, currSticker);
-					newStickers.set(itemId, itemSticker);
-				}
+			//по переданным изменениям позиций стикеров обновляем индексы у стикеров в состоянии
+			action.changes.forEach(/** @param {StickerPosition} change */(change) => {
+				newStickers.get(change.stickerId).index = change.index;
 			});
 
 			const newState = Object.assign({}, state);
