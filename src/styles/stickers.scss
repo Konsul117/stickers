@@ -33,4 +33,13 @@ $drag-border-width: 2px;
 			}
 		}
 	}
+
+	.loading-badge {
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-size: 12px;
+		padding: 2px 3px;
+		background: #FF0;
+	}
 }

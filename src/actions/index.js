@@ -1,4 +1,5 @@
 import AppConstants from "../AppConstants";
+import axios from "../axios";
 
 export const moveSticker =
 
@@ -48,10 +49,10 @@ export const editComplete =
 	 *
 	 * @return {object}
 	 */
-		(text) => {
+		(sticker) => {
 		return {
-			type: AppConstants.EVENT_STICKER_EDIT_COMPLETE,
-			text: text,
+			type:    AppConstants.EVENT_STICKER_EDIT_COMPLETE,
+			sticker: sticker,
 		};
 	};
 
@@ -81,3 +82,37 @@ export const deleteSticker =
 			id:   id,
 		};
 	};
+
+export const showError =
+
+	/**
+	 * Удаление стикера.
+	 *
+	 * @return {object}
+	 */
+	(message) => {
+		return {
+			type:    AppConstants.EVENT_SHOW_ERROR,
+			message: message,
+		};
+	};
+
+export const loadStickers = () => {
+	return {
+		type: AppConstants.EVENT_STICKERS_LOADING,
+	};
+};
+
+export const loadedStickers = (stickers) => {
+	return {
+		type:     AppConstants.EVENT_STICKERS_LOADED,
+		stickers: stickers,
+	};
+};
+
+const onStickersLoaded = (result, isError) => {
+	return {
+		type: AppConstants.EVENT_STICKERS_LOADED,
+		stickers: result,
+	};
+};

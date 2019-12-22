@@ -1,7 +1,7 @@
 import * as React from "react";
 import StickersContainer from "./../components/StickersContainer";
 import {connect} from 'react-redux';
-import {createSticker, deleteSticker, edit, editComplete, editDismiss, moveSticker} from '../actions/index';
+import {createSticker, deleteSticker, edit, editComplete, editDismiss, moveSticker, loadStickers} from '../actions/index';
 
 const mapStateToProps = (state) => {
 	return state;
@@ -66,14 +66,17 @@ const mapDispatchToProps = (dispatch) => {
 		onEditSticker: (id) => {
 			dispatch(edit(id));
 		},
-		onEditComplete: (text) => {
-			dispatch(editComplete(text));
+		onEditComplete: (sticker) => {
+			dispatch(editComplete(sticker));
 		},
 		onDelete: (id) => {
 			dispatch(deleteSticker(id));
 		},
 		onEditDismiss: () => {
 			dispatch(editDismiss());
+		},
+		onOpened: () => {
+			dispatch(loadStickers());
 		},
 	};
 };

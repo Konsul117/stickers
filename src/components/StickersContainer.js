@@ -4,12 +4,23 @@ import "../styles/stickers.scss";
 import StickerOptions from "./StickerOptions";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import AlertContainer from "react-alert";
+import VisibleStickers from "../containers/VisibleStickers";
+
+const alertOptions = {
+	offset:     14,
+	position:   'bottom left',
+	theme:      'dark',
+	time:       5000,
+	transition: 'scale'
+};
 
 /**
  * Контейнер стикеров.
  *
- * @property {Map<number, StickerModel>} props.stickers.list Стикеры
- * @property {Map<number, StickerModel>} state.stickers      Стикеры
+ * @property {Map<number, StickerModel>} props.stickers.list      Стикеры
+ * @property {boolean}                   props.stickers.isLoading Идёт загрузка
+ * @property {Map<number, StickerModel>} state.stickers           Стикеры
  *
  * @property {Map<number, Sticker>} stickersRefs
  */
@@ -41,6 +52,7 @@ export default class StickersContainer extends React.PureComponent {
 	 * @inheritdoc
 	 */
 	componentDidMount() {
+		this.props.onOpened();
 		window.addEventListener('resize', this.onWindowResize);
 		this.updaterStickersCoords();
 	}
@@ -68,6 +80,13 @@ export default class StickersContainer extends React.PureComponent {
 				if (this.props.stickers.list.has(id) === false) {
 					this.stickersRefs.delete(id);
 				}
+			});
+		}
+
+		//если есть сообщение об ошибке и объект-контейнер ошибки отличается от предыдущего состояния, то ошибка обновилась и её нужно вывести
+		if (this.props.errors.message && this.props.errors !== prevProps.errors) {
+			this.msg.show(this.props.errors.message, {
+				type: 'error',
 			});
 		}
 	}
@@ -181,6 +200,12 @@ export default class StickersContainer extends React.PureComponent {
 	 */
 	render() {
 		return <div className="sticker-container">
+			{
+				this.props.stickers.isLoading
+				? <div className="loading-badge">Загрузка...</div>
+				: null
+
+			}
 			<Button variant="fab" color="primary" aria-label="Add" onClick={this.onAddStickerClick}>
 				<AddIcon />
 			</Button>
@@ -196,6 +221,7 @@ export default class StickersContainer extends React.PureComponent {
 				onDelete={this.props.onDelete}
 				onDismiss={this.props.onEditDismiss}
 			/>
+			<AlertContainer ref={a => this.msg = a} {...alertOptions} />
 		</div>
 	}
 }

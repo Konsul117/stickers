@@ -101,7 +101,9 @@ class StickerOptions extends React.PureComponent {
 	 * Обработка завершения редактирования.
 	 */
 	onComplete() {
-		this.props.onComplete(this.state.text);
+		const sticker = this.props.sticker;
+		sticker.text = this.state.text;
+		this.props.onComplete(sticker);
 	}
 
 	/**
@@ -175,7 +177,7 @@ class StickerOptions extends React.PureComponent {
 	 * @return {React.ReactNode|null}
 	 */
 	renderDeleteBtn() {
-		if (this.props.sticker.isNew) {
+		if (this.props.sticker.is_new) {
 			return null;
 		}
 

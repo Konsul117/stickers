@@ -9,6 +9,7 @@ import {applyMiddleware, compose, createStore} from "redux";
 import reducers from "./reducers";
 import {Provider} from "react-redux";
 import ApiMiddleware from './middlewares/ApiMiddleware';
+import './axios';
 
 //если дев-режим, то подключаем devtools
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

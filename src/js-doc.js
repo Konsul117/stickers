@@ -1,10 +1,10 @@
 /**
  * @typedef {object} StickerModel Стикер.
  *
- * @property {number}  id    Идентификатор
- * @property {number}  index Индекс сортировки
- * @property {string}  text  Текст
- * @property {boolean} isNew Новый стикер
+ * @property {number}  id     Идентификатор
+ * @property {number}  index  Индекс сортировки
+ * @property {string}  text   Текст
+ * @property {boolean} is_new Новый стикер
  */
 
 /**
