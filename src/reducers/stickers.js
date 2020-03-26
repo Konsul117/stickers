@@ -38,7 +38,13 @@ export default (state = initialState, action) => {
 		}
 
 		case AppConstants.EVENT_STICKER_CREATE: {
-			const maxId = Math.max.apply(Math, Array.from(state.list.keys()));
+			let maxId;
+			if (state.list.size > 0) {
+				maxId = Math.max.apply(Math, Array.from(state.list.keys()));
+			}
+			else {
+				maxId = 0;
+			}
 
 			/** @type {StickerModel} */
 			const sticker = {
