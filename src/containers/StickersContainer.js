@@ -1,10 +1,18 @@
 import * as React from "react";
-import StickersContainer from "./../components/StickersContainer";
+import Stickers from "../components/Stickers";
 import {connect} from 'react-redux';
-import {createSticker, deleteSticker, edit, editComplete, editDismiss, moveSticker, loadStickers} from '../actions/index';
+import {
+	createSticker,
+	deleteSticker,
+	edit,
+	editComplete,
+	editDismiss,
+	loadStickers,
+	moveSticker
+} from '../actions/index';
 
 const mapStateToProps = (state) => {
-	return state;
+	return Object.assign({}, state.stickers);
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -81,9 +89,9 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-const VisibleStickers = connect(
+const StickersContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(StickersContainer);
+)(Stickers);
 
-export default VisibleStickers;
+export default StickersContainer;

@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"devserver": "NODE_ENV=dev && webpack-dev-server --mode development --debug --hot --devtool eval-* --output-pathinfo --watch --colors --inline --content-base build --port 8090 --host localhost",
+		"devserver": "NODE_ENV=dev && webpack-dev-server --mode development --debug --hot --devtool eval-* --output-pathinfo --watch --colors --inline --content-base build --port 8090 --host 0.0.0.0",
 		"build": "NODE_ENV=production && webpack --mode production"
 	},
 	"author": "Konsul117",

@@ -4,27 +4,17 @@ import "../styles/stickers.scss";
 import StickerOptions from "./StickerOptions";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import AlertContainer from "react-alert";
-import VisibleStickers from "../containers/VisibleStickers";
-
-const alertOptions = {
-	offset:     14,
-	position:   'bottom left',
-	theme:      'dark',
-	time:       5000,
-	transition: 'scale'
-};
 
 /**
  * Контейнер стикеров.
  *
- * @property {Map<number, StickerModel>} props.stickers.list      Стикеры
- * @property {boolean}                   props.stickers.isLoading Идёт загрузка
- * @property {Map<number, StickerModel>} state.stickers           Стикеры
+ * @property {Map<number, StickerModel>} props.list         Стикеры
+ * @property {boolean}                   props.isLoading    Идёт загрузка
+ * @property {Map<number, StickerModel>} state.stickers     Стикеры
  *
  * @property {Map<number, Sticker>} stickersRefs
  */
-export default class StickersContainer extends React.PureComponent {
+export default class Stickers extends React.PureComponent {
 	/**
 	 * @inheritdoc
 	 */
@@ -32,7 +22,7 @@ export default class StickersContainer extends React.PureComponent {
 		super(props);
 
 		this.state = {
-			stickers:       this.sortStickers(this.props.stickers.list),
+			stickers:       this.sortStickers(this.props.list),
 			editingSticker: null,
 		};
 
@@ -44,8 +34,7 @@ export default class StickersContainer extends React.PureComponent {
 		this.onWindowResize     = this.onWindowResize.bind(this);
 
 		this.stickersCoords = new Map();
-
-		this.stickersRefs = new Map();
+		this.stickersRefs   = new Map();
 	}
 
 	/**
@@ -68,24 +57,24 @@ export default class StickersContainer extends React.PureComponent {
 	 * @inheritdoc
 	 */
 	componentDidUpdate(prevProps) {
-		if (prevProps.stickers.list !== this.props.stickers.list) {
+		if (prevProps.list !== this.props.list) {
 			this.setState({
-				stickers: this.sortStickers(this.props.stickers.list),
+				stickers: this.sortStickers(this.props.list),
 			}, () => {
 				this.updaterStickersCoords();
 			});
 
 			//очищаем стикеры, которые были удалены
 			Array.from(this.stickersRefs.keys()).forEach((id) => {
-				if (this.props.stickers.list.has(id) === false) {
+				if (this.props.list.has(id) === false) {
 					this.stickersRefs.delete(id);
 				}
 			});
 		}
 
 		//если есть сообщение об ошибке и объект-контейнер ошибки отличается от предыдущего состояния, то ошибка обновилась и её нужно вывести
-		if (this.props.errors.message && this.props.errors !== prevProps.errors) {
-			this.msg.show(this.props.errors.message, {
+		if (this.props.errorMessage && this.props.errorMessage !== prevProps.errorMessage) {
+			this.msg.show(this.props.errorMessage, {
 				type: 'error',
 			});
 		}
@@ -127,7 +116,7 @@ export default class StickersContainer extends React.PureComponent {
 	 * @param {Coords} newCoords Новые координаты
 	 */
 	onStickerMoved(id, newCoords) {
-		this.props.onStickerMoved(id, newCoords, this.stickersCoords, this.props.stickers.list);
+		this.props.onStickerMoved(id, newCoords, this.stickersCoords, this.props.list);
 	}
 
 	/**
@@ -201,7 +190,7 @@ export default class StickersContainer extends React.PureComponent {
 	render() {
 		return <div className="sticker-container">
 			{
-				this.props.stickers.isLoading
+				this.props.isLoading
 				? <div className="loading-badge">Загрузка...</div>
 				: null
 
@@ -216,12 +205,11 @@ export default class StickersContainer extends React.PureComponent {
 			}
 
 			<StickerOptions
-				sticker={this.props.stickers.editingSticker}
+				sticker={this.props.editingSticker}
 				onComplete={this.props.onEditComplete}
 				onDelete={this.props.onDelete}
 				onDismiss={this.props.onEditDismiss}
 			/>
-			<AlertContainer ref={a => this.msg = a} {...alertOptions} />
 		</div>
 	}
 }
