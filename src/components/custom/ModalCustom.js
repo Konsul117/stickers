@@ -30,7 +30,8 @@ function getModalStyle() {
 class ModalInner extends React.PureComponent {
 	render() {
 		const props = Object.assign({}, {open: true}, this.props);
-		return <Modal {...props}>
+
+		return <Modal {...props} disableEnforceFocus>
 			<div style={getModalStyle()} className={this.props.classes.paper}>
 				{this.props.children}
 			</div>

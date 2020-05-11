@@ -7,6 +7,7 @@ const mapStateToProps = (state) => {
 		isReady:        state.bootstrap.isReady,
 		successMessage: state.alerts.success,
 		errorMessage:   state.alerts.error,
+		messageId:      state.alerts.id,
 	};
 };
 

@@ -11,10 +11,19 @@
 /**
  * @typedef {object} StickerModel Стикер.
  *
- * @property {number}  id     Идентификатор
- * @property {number}  index  Индекс сортировки
- * @property {string}  text   Текст
- * @property {boolean} is_new Новый стикер
+ * @property {number}  id       Идентификатор
+ * @property {number}  index    Индекс сортировки
+ * @property {string}  text     Текст
+ * @property {number}  board_id Доска
+ */
+
+/**
+ * @typedef {object} Board Доска
+ *
+ * @property {number} id        Идентификатор
+ * @property {string} title     Название
+ * @property {number} author_id Автор
+ * @property {number} index     Индекс сортировки
  */
 
 /**

@@ -2,7 +2,8 @@
 import {applyMiddleware, compose, createStore} from "redux";
 import reducers from "./reducers";
 import ApiMiddleware from "./middlewares/ApiMiddleware";
+import BoardMiddleware from "./middlewares/BoardMiddleware";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export default createStore(reducers, composeEnhancers(applyMiddleware(ApiMiddleware)));
+export default createStore(reducers, composeEnhancers(applyMiddleware(ApiMiddleware, BoardMiddleware)));

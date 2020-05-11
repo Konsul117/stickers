@@ -1,18 +1,13 @@
 import * as React from "react";
 import Stickers from "../components/Stickers";
 import {connect} from 'react-redux';
-import {
-	createSticker,
-	deleteSticker,
-	edit,
-	editComplete,
-	editDismiss,
-	loadStickers,
-	moveSticker
-} from '../actions/index';
+import {createSticker, deleteSticker, edit, editDismiss, loadStickers, moveSticker, save} from '../actions/index';
 
 const mapStateToProps = (state) => {
-	return Object.assign({}, state.stickers);
+	return Object.assign({}, state.stickers, {
+		boardId:    state.boards.boardId,
+		boardsList: state.boards.boards,
+	});
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -23,18 +18,18 @@ const mapDispatchToProps = (dispatch) => {
 		 * @param {Map<string, Coords>} allStickersCoords Кооординаты всех стикеров
 		 * @param {Map<number, StickerModel>} stickersList Стикеры
 		 */
-		onStickerMoved: (stickerId, movementCoords, allStickersCoords, stickersList) => {
+		onStickerMoved:  (stickerId, movementCoords, allStickersCoords, stickersList) => {
 			const newStickers = new Map(stickersList.entries());
 
 			/** @type {StickerPosition[]} */
 			const changes = [
 				{
 					stickerId: stickerId,
-					index: 0,
+					index:     0,
 				},
 				{
 					stickerId: null,
-					index: 0,
+					index:     0,
 				},
 			];
 
@@ -71,20 +66,20 @@ const mapDispatchToProps = (dispatch) => {
 		onCreateSticker: () => {
 			dispatch(createSticker());
 		},
-		onEditSticker: (id) => {
+		onEditSticker:   (id) => {
 			dispatch(edit(id));
 		},
-		onEditComplete: (sticker) => {
-			dispatch(editComplete(sticker));
+		onSave:          (sticker) => {
+			dispatch(save(sticker));
 		},
-		onDelete: (id) => {
+		onDelete:        (id) => {
 			dispatch(deleteSticker(id));
 		},
-		onEditDismiss: () => {
+		onEditDismiss:   () => {
 			dispatch(editDismiss());
 		},
-		onOpened: () => {
-			dispatch(loadStickers());
+		onOpened:        (boardId) => {
+			dispatch(loadStickers(boardId));
 		},
 	};
 };

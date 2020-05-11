@@ -16,6 +16,11 @@ const alertOptions = {
  * @property {boolean}     props.isReady
  * @property {string|null} props.successMessage Сообщение об успехе
  * @property {string|null} props.errorMessage   Сообщение об ошибке
+ *
+ *
+ * @property {string|null} props.shown        Сообщение об успехе
+ * @property {string|null} props.errorMessage Сообщение об ошибке
+ * @property {string|null} props.messageId    Идентификатор сообщения
  */
 export default class Layout extends React.PureComponent {
 	/**
@@ -23,16 +28,18 @@ export default class Layout extends React.PureComponent {
 	 */
 	componentDidUpdate(prevProps) {
 		//если есть сообщение об ошибке и объект-контейнер ошибки отличается от предыдущего состояния, то ошибка обновилась и её нужно вывести
-		if (this.props.successMessage && this.props.successMessage !== prevProps.successMessage) {
-			this.msg.show(this.props.successMessage, {
-				type: 'success',
-			});
-		}
+		if (this.props.messageId !== prevProps.messageId) {
+			if (this.props.successMessage !== null) {
+				this.msg.show(this.props.successMessage, {
+					type: 'success',
+				});
+			}
 
-		if (this.props.errorMessage && this.props.errorMessage !== prevProps.errorMessage) {
-			this.msg.show(this.props.errorMessage, {
-				type: 'error',
-			});
+			if (this.props.errorMessage !== null) {
+				this.msg.show(this.props.errorMessage, {
+					type: 'error',
+				});
+			}
 		}
 	}
 	render() {

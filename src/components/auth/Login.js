@@ -45,33 +45,32 @@ export default class Login extends React.PureComponent {
 
 	render() {
 		return <ModalCustom>
-			<Typography variant="title" id="modal-title">
+			<Typography variant="subtitle1" id="modal-title">
 				Авторизация
 			</Typography>
-			<Typography variant="subheading" id="simple-modal-description">
-				<TextField
-					required
-					label="Логин"
-					className={this.props.textField}
-					margin="normal"
-					name="login"
-					value={this.state.login}
-					onChange={this.handleChange}
-				/>
-			</Typography>
 
-			<Typography variant="subheading" id="simple-modal-description">
-				<TextField
-					required
-					label="Пароль"
-					type="password"
-					className={this.props.textField}
-					margin="normal"
-					name="password"
-					value={this.state.password}
-					onChange={this.handleChange}
-				/>
-			</Typography>
+			<TextField
+				required
+				label="Логин"
+				className={this.props.textField}
+				margin="normal"
+				name="login"
+				value={this.state.login}
+				onChange={this.handleChange}
+			/>
+
+			<br/>
+
+			<TextField
+				required
+				label="Пароль"
+				type="password"
+				className={this.props.textField}
+				margin="normal"
+				name="password"
+				value={this.state.password}
+				onChange={this.handleChange}
+			/>
 
 			<br/>
 

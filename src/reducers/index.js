@@ -3,6 +3,7 @@ import stickers from "./stickers";
 import auth from "./auth";
 import alerts from "./alerts";
 import bootstrap from "./bootstrap";
+import boards from "./boards";
 
 let devtools = undefined;
 
@@ -15,5 +16,6 @@ export default combineReducers({
 	stickers,
 	alerts,
 	auth,
+	boards,
 	devtools,
 });
