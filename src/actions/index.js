@@ -93,7 +93,7 @@ export const showSuccess =
 	 */
 		(message) => {
 		return {
-			type:    AppConstants.EVENT_SHOW_MESSAGE_ERROR,
+			type:    AppConstants.EVENT_SHOW_MESSAGE_SUCCESS,
 			message: message,
 			id:      uuid.v4(),
 		};

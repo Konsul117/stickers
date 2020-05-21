@@ -1,5 +1,5 @@
 import axios from "../axios";
-import {loadedBoards, loadedStickers, showError} from '../actions/index';
+import {loadedBoards, loadedStickers, showError, showSuccess} from '../actions/index';
 import AppConstants from "../AppConstants";
 import AuthService from "./../services/AuthService";
 import {selectBoard} from "../actions";
@@ -42,6 +42,24 @@ export default store => next => action => {
 						store.dispatch(showError('Не удалось сохранить стикер'));
 					});
 			}
+			break;
+
+		case AppConstants.EVENT_STICKER_DELETE:
+			axios.delete('/ticket/' + action.id)
+				.then(() => {
+					store.dispatch({
+						type: AppConstants.EVENT_STICKER_DELETE_SUCCESS,
+						id:   action.id,
+					});
+					store.dispatch(showSuccess('Стикер успешно удалён'));
+				})
+				.catch(() => {
+					store.dispatch({
+						type: AppConstants.EVENT_STICKER_DELETE_SUCCESS,
+						id:   action.id,
+					});
+					store.dispatch(showError('Не удалось удалить стикер'));
+				});
 			break;
 
 		case AppConstants.EVENT_STICKER_MOVE:
