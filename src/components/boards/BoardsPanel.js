@@ -17,6 +17,7 @@ import ManageBoardsDialog from "./ManageBoardsDialog";
  * @property {function}           props.onAdd
  * @property {function}           props.onEdit
  * @property {function}           props.showError
+ * @property {function}           props.logOut
  * @property {Map<number, Board>} props.list       Список досок
  * @property {number|null}        props.selectedId Текущая выбранная доска
  * @property {function}           props.onAdd
@@ -36,13 +37,14 @@ export default class BoardsPanel extends React.PureComponent {
 			isEditShown: false,
 		};
 
-		this.onChangeTab = this.onChangeTab.bind(this);
-		this.onMenuBtnClicked = this.onMenuBtnClicked.bind(this);
-		this.onMenuClose = this.onMenuClose.bind(this);
-		this.onAddBoardClick = this.onAddBoardClick.bind(this);
-		this.onEditBoardsClick = this.onEditBoardsClick.bind(this);
-		this.onAddBoardClosed = this.onAddBoardClosed.bind(this);
+		this.onChangeTab        = this.onChangeTab.bind(this);
+		this.onMenuBtnClicked   = this.onMenuBtnClicked.bind(this);
+		this.onMenuClose        = this.onMenuClose.bind(this);
+		this.onAddBoardClick    = this.onAddBoardClick.bind(this);
+		this.onEditBoardsClick  = this.onEditBoardsClick.bind(this);
+		this.onAddBoardClosed   = this.onAddBoardClosed.bind(this);
 		this.onEditBoardsClosed = this.onEditBoardsClosed.bind(this);
+		this.onLogout           = this.onLogout.bind(this);
 		this.props.onOpened();
 		this.anchorEl = null;
 	}
@@ -86,6 +88,10 @@ export default class BoardsPanel extends React.PureComponent {
 		});
 	}
 
+	onLogout() {
+		this.props.logOut();
+	}
+
 	render() {
 		return (
 			<div className="sticker-boards">
@@ -103,7 +109,7 @@ export default class BoardsPanel extends React.PureComponent {
 						>
 							<MenuItem onClick={this.onAddBoardClick}>Добавить доску</MenuItem>
 							<MenuItem onClick={this.onEditBoardsClick}>Редактирование досок</MenuItem>
-							<MenuItem>Выход</MenuItem>
+							<MenuItem onClick={this.onLogout}>Выход</MenuItem>
 						</Menu>
 						{
 							(this.props.selectedId !== null)

@@ -19,6 +19,11 @@ class AuthService {
 		axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 		localStorage.setItem(AppConstants.STORAGE_TOKEN_KEY, token);
 	}
+
+	removeAuthToken() {
+		axios.defaults.headers.common['Authorization'] = '';
+		localStorage.removeItem(AppConstants.STORAGE_TOKEN_KEY);
+	}
 }
 
 

@@ -1,5 +1,6 @@
 import * as React from "react";
 import {loadBoards, selectBoard, showError} from "../actions";
+import {logOut} from "../actions/auth";
 import {add, deleteBatch, edit} from "../actions/board";
 import {connect} from "react-redux";
 import BoardsPanel from "../components/boards/BoardsPanel";
@@ -35,6 +36,9 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		showError: (message) => {
 			dispatch(showError(message));
+		},
+		logOut: () => {
+			dispatch(logOut());
 		},
 	};
 };

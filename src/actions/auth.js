@@ -14,6 +14,12 @@ export const checkAuth = (token) => {
 	};
 };
 
+export const logOut = () => {
+	return {
+		type: AppConstants.EVENT_AUTH_LOGOUT_STARTED,
+	};
+};
+
 export const notAuthenticated = () => {
 	return {
 		type: AppConstants.EVENT_NO_LOGIN,

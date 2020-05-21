@@ -15,7 +15,8 @@ export default (state = initialState, action) => {
 		}
 
 		case AppConstants.EVENT_LOGIN_FAILED:
-		case AppConstants.EVENT_AUTH_BY_TOKEN_FAILED: {
+		case AppConstants.EVENT_AUTH_BY_TOKEN_FAILED:
+		case AppConstants.EVENT_AUTH_LOGOUT_SUCCESS: {
 			const newState = Object.assign({}, state);
 			newState.user = null;
 

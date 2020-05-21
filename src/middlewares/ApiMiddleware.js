@@ -177,6 +177,22 @@ export default store => next => action => {
 					store.dispatch({type: AppConstants.EVENT_AUTH_BY_TOKEN_FAILED});
 				});
 			break;
+
+		case AppConstants.EVENT_AUTH_LOGOUT_STARTED:
+			axios.post('/auth/logout')
+				.then(() => {
+					AuthService.removeAuthToken();
+
+					store.dispatch({
+						type: AppConstants.EVENT_AUTH_LOGOUT_SUCCESS,
+					});
+				})
+				.catch(() => {
+					store.dispatch({
+						type: AppConstants.EVENT_AUTH_LOGOUT_FAILED,
+					});
+				});
+			break;
 	}
 
 	if (callDefaultNext) {
