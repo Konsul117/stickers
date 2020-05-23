@@ -1,10 +1,13 @@
 import * as React from "react";
-import StickersContainer from "./../components/StickersContainer";
+import Stickers from "../components/Stickers";
 import {connect} from 'react-redux';
-import {createSticker, deleteSticker, edit, editComplete, editDismiss, moveSticker} from '../actions/index';
+import {createSticker, deleteSticker, edit, editDismiss, loadStickers, moveSticker, save} from '../actions/index';
 
 const mapStateToProps = (state) => {
-	return state;
+	return Object.assign({}, state.stickers, {
+		boardId:    state.boards.boardId,
+		boardsList: state.boards.boards,
+	});
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -15,18 +18,18 @@ const mapDispatchToProps = (dispatch) => {
 		 * @param {Map<string, Coords>} allStickersCoords Кооординаты всех стикеров
 		 * @param {Map<number, StickerModel>} stickersList Стикеры
 		 */
-		onStickerMoved: (stickerId, movementCoords, allStickersCoords, stickersList) => {
+		onStickerMoved:  (stickerId, movementCoords, allStickersCoords, stickersList) => {
 			const newStickers = new Map(stickersList.entries());
 
 			/** @type {StickerPosition[]} */
 			const changes = [
 				{
 					stickerId: stickerId,
-					index: 0,
+					index:     0,
 				},
 				{
 					stickerId: null,
-					index: 0,
+					index:     0,
 				},
 			];
 
@@ -63,24 +66,27 @@ const mapDispatchToProps = (dispatch) => {
 		onCreateSticker: () => {
 			dispatch(createSticker());
 		},
-		onEditSticker: (id) => {
+		onEditSticker:   (id) => {
 			dispatch(edit(id));
 		},
-		onEditComplete: (text) => {
-			dispatch(editComplete(text));
+		onSave:          (sticker) => {
+			dispatch(save(sticker));
 		},
-		onDelete: (id) => {
+		onDelete:        (id) => {
 			dispatch(deleteSticker(id));
 		},
-		onEditDismiss: () => {
+		onEditDismiss:   () => {
 			dispatch(editDismiss());
+		},
+		onOpened:        (boardId) => {
+			dispatch(loadStickers(boardId));
 		},
 	};
 };
 
-const VisibleStickers = connect(
+const StickersContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(StickersContainer);
+)(Stickers);
 
-export default VisibleStickers;
+export default StickersContainer;

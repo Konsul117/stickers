@@ -1,25 +1,39 @@
 import AppConstants from "../AppConstants";
 
 const initialState = {
-	list: new Map([
-		[1, {id: 1, text: 'qwe', index: 1, isNew: false}],
-		[2, {id: 2, text: 'asd', index: 2, isNew: false}],
-		[3, {id: 3, text: 'zxc', index: 3, isNew: false}],
-		[4, {id: 4, text: 'rty', index: 4, isNew: false}],
-		[5, {id: 5, text: 'fgh', index: 5, isNew: false}],
-		[6, {id: 6, text: 'vbn', index: 6, isNew: false}],
-	]),
-	editingSticker: null,
+	list:            new Map(),
+	boardId:         null,
+	editingSticker:  null,
+	isSavingSuccess: false,
+	isSavingFailed:  false,
+	isLoading:       true,
 };
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case AppConstants.EVENT_STICKERS_LOADING: {
+			const newState = Object.assign({}, state);
+			newState.isLoading = true;
+
+			return newState;
+		}
+		case AppConstants.EVENT_STICKERS_LOADED: {
+			const newState = Object.assign({}, state);
+
+			newState.list = action.stickers;
+			newState.isLoading = false;
+
+			return newState;
+		}
+
 		case AppConstants.EVENT_STICKER_MOVE: {
 			const newStickers = new Map(state.list.entries());
 
 			//по переданным изменениям позиций стикеров обновляем индексы у стикеров в состоянии
 			action.changes.forEach(/** @param {StickerPosition} change */(change) => {
-				newStickers.get(change.stickerId).index = change.index;
+				const item = Object.assign({}, newStickers.get(change.stickerId));
+				item.index = change.index;
+				newStickers.set(change.stickerId, item);
 			});
 
 			const newState = Object.assign({}, state);
@@ -29,14 +43,11 @@ export default (state = initialState, action) => {
 		}
 
 		case AppConstants.EVENT_STICKER_CREATE: {
-			const maxId = Math.max.apply(Math, Array.from(state.list.keys()));
-
 			/** @type {StickerModel} */
 			const sticker = {
-				id:    maxId+1,
-				index: getMinIndex(state.list) - 1,
-				text:  '',
-				isNew: true,
+				id:     null,
+				index:  getMinIndex(state.list)-1,
+				text:   '',
 			};
 
 			const newState          = Object.assign({}, state);
@@ -53,19 +64,35 @@ export default (state = initialState, action) => {
 			return newState;
 		}
 
-		case AppConstants.EVENT_STICKER_EDIT_COMPLETE: {
-			const newState          = Object.assign({}, state);
+		case AppConstants.EVENT_STICKER_SAVE: {
+			const newState = Object.assign({}, state);
+			newState.isSavingSuccess = false;
+			newState.isSavingFailed  = false;
+
+			return newState;
+		}
+
+		case AppConstants.EVENT_STICKER_SAVE_SUCCESS: {
+			const newState = Object.assign({}, state);
+			newState.isSavingSuccess = true;
+			newState.editingSticker  = null;
 
 			/** @type {StickerModel} */
-			const editingSticker = Object.assign({}, newState.editingSticker);
-			editingSticker.text  = action.text;
-			editingSticker.isNew = false;
+			const savedSticker = action.sticker;
 
-			const newStickers = new Map(state.list.entries());
-			newStickers.set(editingSticker.id, editingSticker);
+			if (savedSticker.board_id === state.boardId) {
+				const newStickers = new Map(state.list.entries());
 
-			newState.editingSticker = null;
-			newState.list           = newStickers;
+				newStickers.set(savedSticker.id, savedSticker);
+				newState.list = newStickers;
+			}
+
+			return newState;
+		}
+
+		case AppConstants.EVENT_STICKER_SAVE_FAILED: {
+			const newState = Object.assign({}, state);
+			newState.isSavingFailed = true;
 
 			return newState;
 		}
@@ -89,6 +116,13 @@ export default (state = initialState, action) => {
 
 			return newState;
 
+		}
+
+		case AppConstants.EVENT_BOARD_SELECT: {
+			const newState = Object.assign({}, state);
+			newState.boardId = action.id;
+
+			return newState;
 		}
 
 		default:

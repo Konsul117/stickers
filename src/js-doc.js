@@ -1,10 +1,29 @@
 /**
+ * @typedef {object} AjaxResponse Класс-обёртка ответа контроллера на ajax-запрос
+ *
+ * @property {boolean}  result  Общий результат
+ * @property {object}   data    Данные
+ * @property {string}   message Сообщение пользователю
+ * @property {string[]} errors  Ошибки
+ */
+
+
+/**
  * @typedef {object} StickerModel Стикер.
  *
- * @property {number}  id    Идентификатор
- * @property {number}  index Индекс сортировки
- * @property {string}  text  Текст
- * @property {boolean} isNew Новый стикер
+ * @property {number}  id       Идентификатор
+ * @property {number}  index    Индекс сортировки
+ * @property {string}  text     Текст
+ * @property {number}  board_id Доска
+ */
+
+/**
+ * @typedef {object} Board Доска
+ *
+ * @property {number} id        Идентификатор
+ * @property {string} title     Название
+ * @property {number} author_id Автор
+ * @property {number} index     Индекс сортировки
  */
 
 /**
@@ -21,4 +40,18 @@
  *
  * @property {number} stickerId Идентификатор стикера
  * @property {number} index     Индекс стикера, который должен быть ему назначен
+ */
+
+/**
+ * @typedef {object} UserFront
+ * 
+ * @property {string} name
+ * @property {string} token
+ */
+
+/**
+ * @typedef {object} AuthRequest
+ *
+ * @property {string} login    Логин
+ * @property {string} password Пароль
  */

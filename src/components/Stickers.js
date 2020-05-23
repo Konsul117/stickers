@@ -2,18 +2,23 @@ import * as React from "react";
 import Sticker from "./Sticker";
 import "../styles/stickers.scss";
 import StickerOptions from "./StickerOptions";
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
 
 /**
  * Контейнер стикеров.
  *
- * @property {Map<number, StickerModel>} props.stickers.list Стикеры
- * @property {Map<number, StickerModel>} state.stickers      Стикеры
+ * @property {Map<number, Board>}        props.boardsList      Список досок
+ * @property {number|null}               props.boardId         Текущая доска
+ * @property {Map<number, StickerModel>} props.list            Стикеры
+ * @property {boolean}                   props.isLoading       Идёт загрузка
+ * @property {boolean}                   props.isSavingSuccess
+ * @property {boolean}                   props.isSavingFailed
+ * @property {Map<number, StickerModel>} state.stickers        Стикеры
  *
  * @property {Map<number, Sticker>} stickersRefs
  */
-export default class StickersContainer extends React.PureComponent {
+export default class Stickers extends React.PureComponent {
 	/**
 	 * @inheritdoc
 	 */
@@ -21,7 +26,7 @@ export default class StickersContainer extends React.PureComponent {
 		super(props);
 
 		this.state = {
-			stickers:       this.sortStickers(this.props.stickers.list),
+			stickers:       this.sortStickers(this.props.list),
 			editingSticker: null,
 		};
 
@@ -33,14 +38,16 @@ export default class StickersContainer extends React.PureComponent {
 		this.onWindowResize     = this.onWindowResize.bind(this);
 
 		this.stickersCoords = new Map();
-
-		this.stickersRefs = new Map();
+		this.stickersRefs   = new Map();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	componentDidMount() {
+		if (this.props.boardId) {
+			this.props.onOpened(this.props.boardId);
+		}
 		window.addEventListener('resize', this.onWindowResize);
 		this.updaterStickersCoords();
 	}
@@ -56,18 +63,28 @@ export default class StickersContainer extends React.PureComponent {
 	 * @inheritdoc
 	 */
 	componentDidUpdate(prevProps) {
-		if (prevProps.stickers.list !== this.props.stickers.list) {
+		if (this.props.boardId !== prevProps.boardId) {
+			this.props.onOpened(this.props.boardId);
+		}
+		if (prevProps.list !== this.props.list) {
 			this.setState({
-				stickers: this.sortStickers(this.props.stickers.list),
+				stickers: this.sortStickers(this.props.list),
 			}, () => {
 				this.updaterStickersCoords();
 			});
 
 			//очищаем стикеры, которые были удалены
 			Array.from(this.stickersRefs.keys()).forEach((id) => {
-				if (this.props.stickers.list.has(id) === false) {
+				if (this.props.list.has(id) === false) {
 					this.stickersRefs.delete(id);
 				}
+			});
+		}
+
+		//если есть сообщение об ошибке и объект-контейнер ошибки отличается от предыдущего состояния, то ошибка обновилась и её нужно вывести
+		if (this.props.errorMessage && this.props.errorMessage !== prevProps.errorMessage) {
+			this.msg.show(this.props.errorMessage, {
+				type: 'error',
 			});
 		}
 	}
@@ -108,7 +125,7 @@ export default class StickersContainer extends React.PureComponent {
 	 * @param {Coords} newCoords Новые координаты
 	 */
 	onStickerMoved(id, newCoords) {
-		this.props.onStickerMoved(id, newCoords, this.stickersCoords, this.props.stickers.list);
+		this.props.onStickerMoved(id, newCoords, this.stickersCoords, this.props.list);
 	}
 
 	/**
@@ -181,21 +198,31 @@ export default class StickersContainer extends React.PureComponent {
 	 */
 	render() {
 		return <div className="sticker-container">
-			<Button variant="fab" color="primary" aria-label="Add" onClick={this.onAddStickerClick}>
-				<AddIcon />
-			</Button>
 			{
-				Array.from(this.state.stickers.values()).map(/** @param {StickerModel} sticker */(sticker) => {
-					return <Sticker ref={this.registerStickerRef} onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
-				})
-			}
+				this.props.isLoading
+				? <div className="loading-badge">Загрузка...</div>
+				: <React.Fragment>
+					<Fab color="primary" aria-label="Add" onClick={this.onAddStickerClick}>
+						<AddIcon />
+					</Fab>
+					{
+						Array.from(this.state.stickers.values()).map(/** @param {StickerModel} sticker */(sticker) => {
+							return <Sticker ref={this.registerStickerRef} onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
+						})
+					}
 
-			<StickerOptions
-				sticker={this.props.stickers.editingSticker}
-				onComplete={this.props.onEditComplete}
-				onDelete={this.props.onDelete}
-				onDismiss={this.props.onEditDismiss}
-			/>
+					<StickerOptions
+						sticker={this.props.editingSticker}
+						onSave={this.props.onSave}
+						onDelete={this.props.onDelete}
+						onDismiss={this.props.onEditDismiss}
+						boardsList={this.props.boardsList}
+						currentBoardId={this.props.boardId}
+						isSavingSuccess={this.props.isSavingSuccess}
+						isSavingFailed={this.props.isSavingFailed}
+					/>
+				</React.Fragment>
+			}
 		</div>
 	}
 }

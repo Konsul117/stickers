@@ -7,14 +7,17 @@ const clientConfig = (env, argv) => {
 		entry:        "./src/index.js",
 		output:       {
 			path:       __dirname+'/build/',
-			publicPath: (argv.mode === 'production' ? '/' : 'http://localhost:8090/'),
+			publicPath: (argv.mode === 'production' ? '/' : 'http://0.0.0.0:8090/'),
 			filename:   "bundle.js",
 		},
 		devServer:    {
 			headers: {
 				"Access-Control-Allow-Origin": "*"
 			},
-			hot:     true
+			hot:     		  true,
+			disableHostCheck: true,
+			host:             '0.0.0.0',
+			port:             8090,
 		},
 		watchOptions: {
 			aggregateTimeout: 300,

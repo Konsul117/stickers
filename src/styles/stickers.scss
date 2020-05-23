@@ -5,6 +5,10 @@ $drag-border-width: 2px;
 	font-family: Helvetica, Arial, Times New Roman, serif;
 }
 
+body {
+	margin: 0;
+}
+
 .sticker-container {
 	display:        flex;
 	flex-direction: column;
@@ -32,5 +36,14 @@ $drag-border-width: 2px;
 				border:  $drag-border-width rgba(0, 0, 0, 1) dashed;
 			}
 		}
+	}
+
+	.loading-badge {
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-size: 12px;
+		padding: 2px 3px;
+		background: #FF0;
 	}
 }
