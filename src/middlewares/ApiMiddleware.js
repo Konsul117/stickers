@@ -14,7 +14,7 @@ export default store => next => action => {
 			const sticker = action.sticker;
 
 			if (sticker.id === null) {
-				axios.post('/ticket', sticker)
+				axios.post(URL_PREFIX + '/ticket', sticker)
 					.then((result) => {
 						/** @type {StickerModel} */
 						const stickerResult = result.data;
@@ -28,7 +28,7 @@ export default store => next => action => {
 						store.dispatch(showError('Не удалось сохранить стикер'));
 					});
 			} else {
-				axios.put('/ticket/' + sticker.id, sticker)
+				axios.put(URL_PREFIX + '/ticket/' + sticker.id, sticker)
 					.then((result) => {
 						/** @type {StickerModel} */
 						const stickerResult = result.data;
@@ -45,7 +45,7 @@ export default store => next => action => {
 			break;
 
 		case AppConstants.EVENT_STICKER_DELETE:
-			axios.delete('/ticket/' + action.id)
+			axios.delete(URL_PREFIX + '/ticket/' + action.id)
 				.then(() => {
 					store.dispatch({
 						type: AppConstants.EVENT_STICKER_DELETE_SUCCESS,
@@ -63,7 +63,7 @@ export default store => next => action => {
 			break;
 
 		case AppConstants.EVENT_STICKER_MOVE:
-			axios.post('/ticket/batch', action.changes)
+			axios.post(URL_PREFIX + '/ticket/batch', action.changes)
 				.then()
 				.catch(() => {
 					store.dispatch(showError('Не удалось сохранить стикеры'));
@@ -78,7 +78,7 @@ export default store => next => action => {
 			break;
 
 		case AppConstants.EVENT_BOARDS_LOADING:
-			axios.get('/board')
+			axios.get(URL_PREFIX + '/board')
 				.then(/** @param {AjaxResponse} result */(result) => {
 					/** @type {Map<number, Board>} */
 					const boards = new Map();
@@ -114,7 +114,7 @@ export default store => next => action => {
 			// 	store.dispatch(loadedStickers(savedData));
 			// }
 
-			axios.get('/ticket?boardId='+action.boardId)
+			axios.get(URL_PREFIX + '/ticket?boardId='+action.boardId)
 				.then(/** @param {AjaxResponse} result */(result) => {
 					const stickers = new Map();
 					result.data.forEach(/** @param {StickerModel} item */(item) => {
@@ -130,7 +130,7 @@ export default store => next => action => {
 			break;
 
 		case AppConstants.EVENT_LOGIN_STARTED:
-			axios.post('/auth/login', action.request)
+			axios.post(URL_PREFIX + '/auth/login', action.request)
 				.then((result) => {
 					/** @type {AjaxResponse} */
 					const response = result.data;
@@ -161,7 +161,7 @@ export default store => next => action => {
 			break;
 
 		case AppConstants.EVENT_AUTH_BY_TOKEN_STARTED:
-			axios.get('/auth/status?token=' + action.token)
+			axios.get(URL_PREFIX + '/auth/status?token=' + action.token)
 				.then((result) => {
 					/** @type {AjaxResponse} */
 					const response = result.data;
@@ -179,7 +179,7 @@ export default store => next => action => {
 			break;
 
 		case AppConstants.EVENT_AUTH_LOGOUT_STARTED:
-			axios.post('/auth/logout')
+			axios.post(URL_PREFIX + '/auth/logout')
 				.then(() => {
 					AuthService.removeAuthToken();
 

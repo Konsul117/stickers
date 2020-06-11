@@ -3,6 +3,7 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const clientConfig = (env, argv) => {
+	const URL_PREFIX = (argv.mode === 'production' ? '/api' : '');
 	let result = {
 		entry:        "./src/index.js",
 		output:       {
@@ -23,6 +24,11 @@ const clientConfig = (env, argv) => {
 			aggregateTimeout: 300,
 			poll:             1000
 		},
+		plugins: [
+			new webpack.DefinePlugin({
+				'URL_PREFIX': JSON.stringify(URL_PREFIX),
+			}),
+		],
 		module:       {
 			rules: [
 				{

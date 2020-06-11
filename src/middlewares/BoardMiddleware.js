@@ -5,7 +5,7 @@ import {selectBoard, showError} from "../actions";
 export default store => next => action => {
 	switch (action.type) {
 		case AppConstants.EVENT_BOARD_CREATE_STARTED:
-			axios.post('/board', action.board)
+			axios.post(URL_PREFIX + '/board', action.board)
 				.then((result) => {
 					/** @type {Board} */
 					const board = result.data;
@@ -39,7 +39,7 @@ export default store => next => action => {
 		case AppConstants.EVENT_BOARD_EDIT_STARTED:
 			/** @type {Board} */
 			const board = action.board;
-			axios.put('/board/' + board.id, board)
+			axios.put(URL_PREFIX + '/board/' + board.id, board)
 				.then((result) => {
 					/** @type {Board} */
 					const resultBoard = result.data;
@@ -90,7 +90,7 @@ export default store => next => action => {
 				}
 			}
 
-			axios.post('/board/batch', action.list)
+			axios.post(URL_PREFIX + '/board/batch', action.list)
 				.then((result) => {
 					/** @type {Board} */
 					const board = result.data;
