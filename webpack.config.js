@@ -1,6 +1,7 @@
 "use strict";
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require("webpack");
 
 const clientConfig = (env, argv) => {
 	const URL_PREFIX = (argv.mode === 'production' ? '/api' : '');
