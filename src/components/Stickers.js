@@ -63,7 +63,7 @@ export default class Stickers extends React.PureComponent {
 	 * @inheritdoc
 	 */
 	componentDidUpdate(prevProps) {
-		if (this.props.boardId !== prevProps.boardId) {
+		if (this.props.boardId !== null && this.props.boardId !== prevProps.boardId) {
 			this.props.onOpened(this.props.boardId);
 		}
 		if (prevProps.list !== this.props.list) {
@@ -199,30 +199,38 @@ export default class Stickers extends React.PureComponent {
 	render() {
 		return <div className="sticker-container">
 			{
-				this.props.isLoading
-				? <div className="loading-badge">Загрузка...</div>
-				: <React.Fragment>
-					<Fab color="primary" aria-label="Add" onClick={this.onAddStickerClick}>
-						<AddIcon />
-					</Fab>
-					{
-						Array.from(this.state.stickers.values()).map(/** @param {StickerModel} sticker */(sticker) => {
-							return <Sticker ref={this.registerStickerRef} onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
-						})
-					}
-
-					<StickerOptions
-						sticker={this.props.editingSticker}
-						onSave={this.props.onSave}
-						onDelete={this.props.onDelete}
-						onDismiss={this.props.onEditDismiss}
-						boardsList={this.props.boardsList}
-						currentBoardId={this.props.boardId}
-						isSavingSuccess={this.props.isSavingSuccess}
-						isSavingFailed={this.props.isSavingFailed}
-					/>
-				</React.Fragment>
+				(this.props.boardId !== null)
+				?
+					!this.props.isLoading
+					? this.renderWorkspace()
+						: <div className="loading-badge">Загрузка...</div>
+				:
+					<p>Отсутствует рабочая доска. Добавьте доску.</p>
 			}
 		</div>
+	}
+
+	renderWorkspace() {
+		return <React.Fragment>
+			<Fab color="primary" aria-label="Add" onClick={this.onAddStickerClick}>
+				<AddIcon />
+			</Fab>
+			{
+				Array.from(this.state.stickers.values()).map(/** @param {StickerModel} sticker */(sticker) => {
+					return <Sticker ref={this.registerStickerRef} onClick={this.onStickerClick} key={sticker.id} sticker={sticker} onSetCoords={this.onStickerSetCoords} onMoved={this.onStickerMoved}/>
+				})
+			}
+
+			<StickerOptions
+				sticker={this.props.editingSticker}
+				onSave={this.props.onSave}
+				onDelete={this.props.onDelete}
+				onDismiss={this.props.onEditDismiss}
+				boardsList={this.props.boardsList}
+				currentBoardId={this.props.boardId}
+				isSavingSuccess={this.props.isSavingSuccess}
+				isSavingFailed={this.props.isSavingFailed}
+			/>
+		</React.Fragment>;
 	}
 }

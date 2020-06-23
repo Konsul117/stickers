@@ -51,7 +51,7 @@ export default (state = initialState, action) => {
 			const boardsArray = Array.from(newState.boards.values());
 			boardsArray.push(action.board);
 
-			newState.boards = boardsArray.sort(/**
+			const boardsArraySorted = boardsArray.sort(/**
 			 * @param {Board} a
 			 * @param {Board} b
 			 */(a, b) => {
@@ -63,6 +63,11 @@ export default (state = initialState, action) => {
 				}
 
 				return 0;
+			});
+
+			newState.boards = new Map();
+			boardsArraySorted.forEach((item, i) => {
+				newState.boards.set(i, item);
 			});
 
 			return newState;

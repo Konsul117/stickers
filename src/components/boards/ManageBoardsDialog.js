@@ -229,6 +229,15 @@ export default class ManageBoardsDialog extends React.PureComponent {
 	}
 
 	renderList() {
+		if (this.props.list.size === 0) {
+			return <React.Fragment>
+				<p>Доски отсутствуют</p>
+				<Button variant="contained" color="primary" onClick={this.props.onClose} disabled={this.state.isProcessing}>
+					Закрыть
+				</Button>
+			</React.Fragment>;
+		}
+
 		return <React.Fragment>
 			<Typography variant="subtitle1" id="modal-title">
 				Редактирование досок
@@ -272,9 +281,7 @@ export default class ManageBoardsDialog extends React.PureComponent {
 				<Checkbox
 					indeterminate={this.state.isSelectedIndeterminate}
 					checked={this.state.isSelectedAll}
-					// checked={rowCount > 0 && numSelected === rowCount}
 					onChange={this.onSelectAll}
-					// inputProps={{ 'aria-label': 'select all desserts' }}
 				/>
 			</TableCell>
 			<TableCell className="title-column">

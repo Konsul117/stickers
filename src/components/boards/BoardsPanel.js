@@ -49,6 +49,15 @@ export default class BoardsPanel extends React.PureComponent {
 		this.anchorEl = null;
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		//если список досок опустел и висит окно редактирования досок, то скрываем его
+		if (this.props.list.size === 0 && prevProps.list.size !== 0) {
+			if (this.state.isEditShown) {
+				this.setState({isEditShown: false});
+			}
+		}
+	}
+
 	onChangeTab(event, newValue) {
 		this.props.onSelect(newValue);
 	}

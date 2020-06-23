@@ -115,12 +115,15 @@ export default (state = initialState, action) => {
 			newState.editingSticker = null;
 
 			return newState;
-
 		}
 
 		case AppConstants.EVENT_BOARD_SELECT: {
 			const newState = Object.assign({}, state);
 			newState.boardId = action.id;
+
+			if (action.id === null) {
+				newState.list = new Map();
+			}
 
 			return newState;
 		}

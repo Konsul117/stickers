@@ -18,6 +18,12 @@ export default store => next => action => {
 						type:    AppConstants.EVENT_SHOW_MESSAGE_SUCCESS,
 						message: 'Доска успешно добавлена: ' + board.title,
 					});
+
+					const currentBoardId = store.getState().stickers.boardId;
+					if (currentBoardId === null) {
+						store.dispatch(selectBoard(board.id));
+					}
+
 				})
 				.catch((e) => {
 					store.dispatch({
@@ -85,9 +91,7 @@ export default store => next => action => {
 					}
 				});
 
-				if (newBoardId !== null) {
-					store.dispatch(selectBoard(newBoardId));
-				}
+				store.dispatch(selectBoard(newBoardId));
 			}
 
 			axios.post(URL_PREFIX + '/board/batch', action.list)

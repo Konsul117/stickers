@@ -73,7 +73,11 @@ export default store => next => action => {
 		case AppConstants.EVENT_BOARD_SELECT:
 			let boardId = localStorage.getItem(CURRENT_BOARD_ID_KEY);
 			if (boardId !== action.id) {
-				localStorage.setItem(CURRENT_BOARD_ID_KEY, action.id);
+				if (action.id !== null) {
+					localStorage.setItem(CURRENT_BOARD_ID_KEY, action.id);
+				} else {
+					localStorage.removeItem(CURRENT_BOARD_ID_KEY);
+				}
 			}
 			break;
 
@@ -87,12 +91,14 @@ export default store => next => action => {
 					});
 					store.dispatch(loadedBoards(boards))
 
-					//берём из сессии идентификатор доски. Если его нет, то берём первую доску в списке
+					//берём из сессии идентификатор доски. Если его нет или он не существует в списке, то берём первую доску в списке
 					let boardId = localStorage.getItem(CURRENT_BOARD_ID_KEY);
-					if (boardId === null && boards.size > 0) {
-						/** @type {Board} */
-						const firstBoard = boards.entries().next().value[1];
-						boardId = firstBoard.id;
+					if (boardId === null || (boards.has(boardId) === false)) {
+						if (boards.size > 0) {
+							/** @type {Board} */
+							const firstBoard = boards.entries().next().value[1];
+							boardId = firstBoard.id;
+						}
 					}
 
 					if (boardId !== null) {
