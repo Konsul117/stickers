@@ -5,6 +5,7 @@ const webpack = require("webpack");
 
 const clientConfig = (env, argv) => {
 	const URL_PREFIX = (argv.mode === 'production' ? '/api' : '');
+	const BACKEND_BASE_URL = (argv.mode === 'production' ? '' : 'http://stickers.loc/');
 	let result = {
 		entry:        "./src/index.js",
 		output:       {
@@ -28,6 +29,7 @@ const clientConfig = (env, argv) => {
 		plugins: [
 			new webpack.DefinePlugin({
 				'URL_PREFIX': JSON.stringify(URL_PREFIX),
+				'BACKEND_BASE_URL': JSON.stringify(BACKEND_BASE_URL),
 			}),
 		],
 		module:       {
