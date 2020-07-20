@@ -93,6 +93,11 @@ export default store => next => action => {
 
 					//берём из сессии идентификатор доски. Если его нет или он не существует в списке, то берём первую доску в списке
 					let boardId = localStorage.getItem(CURRENT_BOARD_ID_KEY);
+
+					if (boardId !== null) {
+						boardId = parseInt(boardId);
+					}
+
 					if (boardId === null || (boards.has(boardId) === false)) {
 						if (boards.size > 0) {
 							/** @type {Board} */
@@ -102,7 +107,6 @@ export default store => next => action => {
 					}
 
 					if (boardId !== null) {
-						boardId = parseInt(boardId);
 						store.dispatch(selectBoard(boardId));
 					}
 				})
