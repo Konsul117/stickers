@@ -28,7 +28,7 @@
 		"js-uuid": "0.0.6",
 		"local-storage-fallback": "4.1.0",
 		"moment": "2.20.1",
-		"node-sass": "4.7.2",
+		"node-sass": "4.13.1",
 		"query-string": "^6.2.0",
 		"react": "^16.13.1",
 		"react-alert": "^2.4.0",
