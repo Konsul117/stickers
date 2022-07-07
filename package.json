@@ -27,7 +27,7 @@
 		"immutable": "^4.0.0-rc.12",
 		"js-uuid": "0.0.6",
 		"local-storage-fallback": "4.1.0",
-		"moment": "2.20.1",
+		"moment": "2.29.4",
 		"node-sass": "4.7.2",
 		"query-string": "^6.2.0",
 		"react": "^16.13.1",
